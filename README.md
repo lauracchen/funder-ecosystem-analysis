@@ -72,6 +72,12 @@ The general workflow is:
 5. **Adjust for inflation** to enable fair comparisons across years
 6. **Analyze and visualize** the data to surface insights
 
+## Known Limitations
+- Tax period handling: here we work directly with tax_prd_yr, which represents the tax period of the filing. In lieu of more granular grant data (disbursement date), tax periods are assumed to represent the same calendar year, although there may be some mismatch of tax year schedule and therefore when nonprofits actually received funds. Hence, year to year variations should be assessed with this in mind, but this effect should smooth out when assessing multi-year trends.
+- Data from Impala is understood to be reported as Contributions Given per cash basis, while these are reported on a per books basis from the ProPublica API. This means that the latest year of data (from Impala) is not a completely "apples-to-apples" comparison, and should be taken as a ballpark figure when compared to previous years of data. This motivated the IRS XML approach described below.
+- Note that this aggregation can change significantly based on which funders are included.  The smaller the subset, the more likely changes over time will have higher variance.
+
+
 ## Adapting This Tool for Your Needs
 
 This tool is designed to be adapted for your own funder network research. The **main requirement** is:
