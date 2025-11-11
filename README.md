@@ -1,18 +1,22 @@
 # Funder Network Ecosystem Analysis
 
-A flexible starting point for analyzing and understanding the philanthropic ecosystem around the Robert Sterling Clark Foundation. This project was developed to help the Robert Sterling Clark Foundation (RSCF) better understand the funder network that supports similar grantee-partners, identify trends in grantmaking over time, and surface insights about the broader funding landscape. We also wanted to aggregate relevant information for grantee partners as they map funding sources.
+A flexible starting point for analyzing and understanding the philanthropic ecosystem around the Robert Sterling Clark Foundation. This project was developed to help the Robert Sterling Clark Foundation (RSCF)
+- better understand the funder network that supports similar grantee-partners
+- identify trends in grantmaking over time
+- surface insights about the broader funding landscape
+- aggregate relevant information for grantee partners as they map funding sources
 
 ## Overview
 
 This analysis tool helps foundations and researchers:
 
-- **Identify overlap** in the funder ecosystem: which foundations fund similar organizations to yours
+- **Identify overlap** in the funder ecosystem: which foundations fund the same organizations to yours
 - **Enrich funder data** using AI-powered web research to gather programmatic and geographic focus areas
 - **Analyze funding trends** over time with inflation-adjusted historical data
 - **Visualize the landscape** through treemaps, time series, and distribution charts
 - **Surface partnership opportunities** by understanding which funders have similar missions and accept unsolicited proposals
 
-The tool is designed to be **adaptable** - while it was built for RSCF's needs, it can be customized to explore different research questions about any funder network.
+The tool is designed to be **adaptable** - while it was built for RSCF's needs, its basic components can be customized to explore different research questions about any funder network.
 
 ## Data Sources
 
@@ -95,13 +99,15 @@ The notebook includes comments and explanations throughout to guide customizatio
 ### Prerequisites
 
 - Python 3.8 or higher
-- An OpenAI API key (for the LLM-powered enrichment features)
+- An OpenAI API key (for the LLM-powered search/enrichment features)
+As of October 2025, the cost to search (per funder) was approximately $0.04.
 
 ### Installation
 
 1. Clone this repository
 2. Install required packages:
    ```bash
+   python -m venv funder_env
    pip install -r requirements.txt
    ```
 
@@ -122,19 +128,19 @@ The notebook includes comments and explanations throughout to guide customizatio
 
 ### Running the Analysis
 
-Open `irs_data.ipynb` in Jupyter Notebook or JupyterLab and run the cells sequentially. The notebook is organized into logical sections that can be run independently once initial data loading is complete.
+Open `irs_data.ipynb` in Jupyter Notebook or JupyterLab and run the cells sequentially. The notebook is organized into logical sections that can be run independently once initial data loading is complete. It should be run using the virtual environment created above.
 
-## The IRS XML Challenge: Why We Use the ProPublica API
+## The IRS XML Challenge: Why We Use the ProPublica API in This Version of Analysis
 
 ### Initial Approach
 
-We initially attempted to work directly with IRS XML files, which are publicly available through the IRS's bulk data downloads. This approach seemed attractive because:
+We initially attempted to work directly with IRS XML files, which are publicly available through the IRS's bulk data downloads. These were previously available in an AWS S3 (storage) bucket, simplifying access and processing. However, these are now only available via direct, bulk download. Trying the bulk download approach seemed attractive because it provided:
 
 - Direct access to the most current data, without waiting for others to process the data
 - Complete field coverage with all Form 990 data points available
 - No dependency on external paid services
 
-### The Complexity Problem
+### Challenges
 
 However, we encountered significant challenges that made direct XML parsing impractical for this project:
 
@@ -147,7 +153,7 @@ The IRS has modified the Form 990 XML schema multiple times over the years. Fiel
 Even within the same general time period, we found inconsistencies:
 - The same concept might be represented with different XML element names
 - Fields might appear in different sections of the form structure
-- Some organizations' filings used different schema versions even for the same tax year
+- Some organizations' filings used different schema versions, especially if they filed different versions of the 990 form, even for the same tax year
 
 **3. Namespace and Structure Challenges**
 
@@ -158,7 +164,7 @@ The XML files use complex namespace definitions, and the location of key data po
 
 **4. Data Volume**
 
-The IRS bulk files are enormous (multiple gigabytes per year), requiring significant download, storage, and processing time - especially when only a subset of organizations (83 funders in our case) were needed.
+The IRS bulk files are enormous (multiple gigabytes per year), requiring significant download, storage, and processing time - especially when only a subset of organizations (~85 funders in our case) were needed.
 
 ### Our Solution
 
@@ -189,13 +195,11 @@ All visualizations are generated inline in the Jupyter notebook and can be expor
 
 ## Questions or Issues
 
-This tool was developed as an internal analysis project and is shared as a methodology demonstration. While we cannot provide ongoing support, we welcome questions about the approach and are happy to hear about adaptations you've made for your own work.
+This tool was developed as an internal analysis project and is shared as a methodology demonstration. We welcome questions about the approach and are happy to hear about adaptations you've made for your own work.
 
 ## Acknowledgments
 
 This project uses:
 - [ProPublica Nonprofit Explorer API](https://projects.propublica.org/nonprofits/api) for IRS Form 990 data
 - OpenAI's GPT models for web research and data enrichment
-- Various Python data science libraries (pandas, matplotlib, etc.)
-
-Data on co-funders was sourced from the Impala database where available.
+- Impala nonprofit database
